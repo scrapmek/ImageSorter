@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,10 +21,10 @@ namespace ImageSorter
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    
+
     public partial class MainWindow : Window
     {
-        
+
         DataBundle bundle;
         BackgroundWorker worker;
         int filesMoved;
@@ -60,11 +61,12 @@ namespace ImageSorter
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            
 
-                List<string> list = FileHandler.PopulateImageList(bundle.sourceFolderBrowser.SelectedPath);
 
-                for (int i = 0; i < (list.Count); i++)
+            List<string> list = FileHandler.PopulateImageList(bundle.sourceFolderBrowser.SelectedPath);
+            ImageHandler imgHandler = new ImageHandler(bundle.destinationFolderBrowser.SelectedPath);
+
+            for (int i = 0; i < (list.Count); i++)
             {
                 try
                 {
@@ -75,15 +77,20 @@ namespace ImageSorter
                     }
                     else
                     {
-                        if (!FileHandler.DetermineDuplicate(list[i], bundle.destinationFolderBrowser.SelectedPath))
+                        string perspectiveDestination = imgHandler.generateFullDestinationDirectory(list[i]);
+                        if (imgHandler.hashDictionary.ContainsKey(perspectiveDestination))
                         {
-                            FileHandler.TransferImage(list[i], bundle.destinationFolderBrowser.SelectedPath);
-                            filesMoved++;
+                            if (imgHandler.hashDictionary[perspectiveDestination].Contains(imgHandler.generateImageHash(list[i])))
+                            {
+                                File.Copy(list[i], imgHandler.g);
+                                filesMoved++;
+                            }
+                            else
+                                duplicatesFound++;
                         }
                         else
-                        {
                             duplicatesFound++;
-                        }
+                        
                         if (list.Count > 0)
                         {
                             worker.ReportProgress((int)(((decimal)(i + 1) / ((decimal)list.Count)) * 100));
@@ -211,7 +218,7 @@ namespace ImageSorter
             sourceOpenButton.IsEnabled = true;
             destinationOpenButton.IsEnabled = true;
         }
-        
+
     }
 
     public class DataBundle
@@ -229,5 +236,5 @@ namespace ImageSorter
 
 
     }
-    
+
 }

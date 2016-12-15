@@ -13,32 +13,29 @@ namespace ImageSorter
         {
             bool result = true;
 
-            Bitmap a = generateImageFingerprint(image1, precision);
-            Bitmap b = generateImageFingerprint(image2, precision);
-
-            for (int x = 0; x < a.Width; x++)
+            using (Bitmap a = generateImageFingerprint(image1, precision))
+            using (Bitmap b = generateImageFingerprint(image2, precision))
             {
-                for (int y = 0; y < a.Height; y++)
+
+                for (int x = 0; x < a.Width; x++)
                 {
-                    Color aPixelColour = a.GetPixel(x, y);
-                    Color bPixelColour = b.GetPixel(x, y);
-                    if (aPixelColour != bPixelColour)
+                    for (int y = 0; y < a.Height; y++)
                     {
-                        result = false;
+                        Color aPixelColour = a.GetPixel(x, y);
+                        Color bPixelColour = b.GetPixel(x, y);
+                        if (aPixelColour != bPixelColour)
+                        {
+                            result = false;
+                            break;
+                        }
+                    }
+                    if (!result)
+                    {
                         break;
                     }
                 }
-                if (!result)
-                {
-                    break;
-                }
             }
-
-            a.Dispose();
-            a = null;
-            b.Dispose();
-            b = null;
-
+            
             return result;
 
 

@@ -63,7 +63,7 @@ namespace ImageSorter
         {
 
 
-            List<string> list = ImageHandler.findAllImages(bundle.sourceFolderBrowser.SelectedPath);
+            List<string> list = FileHandler.PopulateImageList(bundle.sourceFolderBrowser.SelectedPath);
             ImageHandler imgHandler = new ImageHandler(bundle.destinationFolderBrowser.SelectedPath);
 
             for (int i = 0; i < (list.Count); i++)
@@ -80,22 +80,17 @@ namespace ImageSorter
                         string perspectiveDestination = imgHandler.generateFullDestinationDirectory(list[i]);
                         if (imgHandler.hashDictionary.ContainsKey(perspectiveDestination))
                         {
-
-                        }
-                        else
-                        {
-                            imgHandler.generateFullDestinationDirectory(list[i]);
-                            File.Copy(list[i], imgHandler.generateDestinationPath(list[i]));
-                            
-                        }
-                        if (!imgHandler.hashDictionary[perspectiveDestination].Contains(imgHandler.generateImageHash(list[i])))
-                        {
-                            File.Copy(list[i], imgHandler.generateDestinationPath(list[i]));
-                            filesMoved++;
+                            if (imgHandler.hashDictionary[perspectiveDestination].Contains(imgHandler.generateImageHash(list[i])))
+                            {
+                                File.Copy(list[i], imgHandler.g);
+                                filesMoved++;
+                            }
+                            else
+                                duplicatesFound++;
                         }
                         else
                             duplicatesFound++;
-
+                        
                         if (list.Count > 0)
                         {
                             worker.ReportProgress((int)(((decimal)(i + 1) / ((decimal)list.Count)) * 100));

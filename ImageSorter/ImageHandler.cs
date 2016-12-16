@@ -15,7 +15,6 @@ namespace ImageSorter
         public ImageHandler(string rootBackupDirectory)
         {
             rootDirectory = rootBackupDirectory;
-            hashDictionary = new Dictionary<string, List<long>>();
             generateHashDictionary();
         }
 
@@ -47,21 +46,7 @@ namespace ImageSorter
 
         }
 
-        public static List<string> findAllImages(string sourceFolder)
-        {
-            List<string> folders = Directory.EnumerateDirectories(sourceFolder, "", SearchOption.AllDirectories).ToList();
-            folders.Add(sourceFolder);
-            List<string> imageFiles = new List<string>();
-
-            foreach (string item in folders)
-            {
-                imageFiles.AddRange(getImageFiles(item));
-            }
-
-            return imageFiles;
-        }
-
-        private static List<string> getImageFiles(string path)
+        private List<string> getImageFiles(string path)
         {
             List<string> pendingPathList = Directory.EnumerateFiles(path).ToList();
             List<string> imagePathList = new List<string>();
@@ -125,7 +110,6 @@ namespace ImageSorter
             string directory = rootDirectory;
             FileInfo currentFileInfo = new FileInfo(imagePath);
             DateTime creationTime = determineLikelyCreationTime(currentFileInfo);
-            
 
             directory += "/" + creationTime.Year.ToString();
             directory += "/" + convertMonthNumberToName(creationTime.Month);
@@ -155,10 +139,8 @@ namespace ImageSorter
             return name;
         }
 
-        public string generateDestinationPath(string imagePath)
+        private string generateDestinationPath(string destinationFolder, string imagePath)
         {
-
-            string destinationFolder = generateFullDestinationDirectory(imagePath);
             FileInfo info = new FileInfo(imagePath);
             string originalName = Path.GetFileNameWithoutExtension(imagePath);
             string candidateName = originalName;

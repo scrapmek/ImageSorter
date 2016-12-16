@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Windows;
-using System.Drawing;
-using ImageSorter;
 using System.Linq;
 
-public class FileHandler
+/*public class FileHandler
 {
     
     
@@ -182,3 +178,4 @@ public class FileHandler
         GIF,
     }
 }
+*/

@@ -2,19 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ImageSorter
 {
@@ -63,9 +52,8 @@ namespace ImageSorter
         {
 
 
-            List<string> list = FileHandler.PopulateImageList(bundle.sourceFolderBrowser.SelectedPath);
-            ImageHandler imgHandler = new ImageHandler(bundle.destinationFolderBrowser.SelectedPath);
-
+            List<string> list = ImageHandler.getallInputImageFiles(bundle.sourceFolderBrowser.SelectedPath);
+            
             for (int i = 0; i < (list.Count); i++)
             {
                 try
@@ -77,20 +65,12 @@ namespace ImageSorter
                     }
                     else
                     {
-                        string perspectiveDestination = imgHandler.generateFullDestinationDirectory(list[i]);
-                        if (imgHandler.hashDictionary.ContainsKey(perspectiveDestination))
+                        using(ImageHandler imgHandler = new ImageHandler(list[i], bundle.destinationFolderBrowser.SelectedPath))
                         {
-                            if (imgHandler.hashDictionary[perspectiveDestination].Contains(imgHandler.generateImageHash(list[i])))
-                            {
-                                File.Copy(list[i], imgHandler.g);
-                                filesMoved++;
-                            }
-                            else
-                                duplicatesFound++;
+                            if (imgHandler.Transfer()) filesMoved++;
+                            else duplicatesFound++;
                         }
-                        else
-                            duplicatesFound++;
-                        
+                            
                         if (list.Count > 0)
                         {
                             worker.ReportProgress((int)(((decimal)(i + 1) / ((decimal)list.Count)) * 100));

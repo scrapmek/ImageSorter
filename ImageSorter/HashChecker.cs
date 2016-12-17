@@ -2,18 +2,27 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageSorter
 {
     class HashChecker
     {
         public List<ImageInfo> ImageInfoList { get; set; }
+        private string directory { get; set; }
 
-        public HashChecker()
+        public HashChecker(string rootDirectory)
         {
-            ImageInfoList = new List<ImageInfo>();
+            directory = rootDirectory;
+
+            List<string> files = Directory.EnumerateFiles(rootDirectory, "*", SearchOption.AllDirectories).ToList();
+            List<string> images = Helpers.GetAllImageFiles(files);
+
+            foreach (string item in images)
+            {
+                long hash = Helpers.GenerateImageHash(item);
+                ImageInfoList.Add(new ImageInfo(item, hash));
+            }
+            
         }
 
         public void AddNewImageInfo(string path, long hash)
@@ -23,8 +32,23 @@ namespace ImageSorter
 
         public bool CheckIfDuplicate(string path)
         {
-            FileInfo info = new FileInfo(path);
-            return true;
+            bool result = false;
+
+            FileInfo perspectiveInfo = new FileInfo(path);
+            long perspectiveHash = Helpers.GenerateImageHash(path); 
+            string perspectiveDestinationFolder = Helpers.GenerateDestinationDirectory(perspectiveInfo, directory);
+
+            foreach (ImageInfo item in ImageInfoList)
+            {
+                if (perspectiveDestinationFolder == item.Info.DirectoryName && perspectiveHash == item.ImageHash)
+                {
+                    result = true;
+                    break;
+                }
+
+            }
+
+            return result;
         }
     }
 }

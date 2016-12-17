@@ -57,7 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="GeneralStaticHelpers.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="HashChecker.cs" />
     <Compile Include="ImageHandler.cs" />
     <Page Include="MainWindow.xaml">

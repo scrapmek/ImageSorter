@@ -52,7 +52,7 @@ namespace ImageSorter
         {
 
 
-            List<string> list = ImageHandler.getAllInputImageFiles(bundle.sourceFolderBrowser.SelectedPath);
+            List<string> list = Helpers.GetAllInputImageFiles(bundle.sourceFolderBrowser.SelectedPath);
             
             for (int i = 0; i < (list.Count); i++)
             {

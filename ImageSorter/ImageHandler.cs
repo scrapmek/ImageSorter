@@ -7,10 +7,12 @@ using System.Linq;
 
 namespace ImageSorter
 {
-    class ImageHandler :IDisposable
+    class ImageHandler : IDisposable
     {
         public string RootDestinationDirectory { get; set; }
         public string InputFile { get; set; }
+
+         
 
         public ImageHandler(string input, string output)
         {
@@ -21,8 +23,8 @@ namespace ImageSorter
         public bool Transfer()
         {
             bool result = false;
-                if (checkDirectoryExists(InputFile))
-                {
+            if (checkDirectoryExists(InputFile))
+            {
                 if (!checkIfImageIsDuplicate(InputFile))
                 {
                     string fileDestinationPath = createUniqueFilePath(InputFile);
@@ -30,18 +32,18 @@ namespace ImageSorter
                     result = true;
                 }
                 else result = false;
-                }
-                else
-                {
-                    string fileDestinationPath = createUniqueFilePath(InputFile);
-                    Directory.CreateDirectory(generateDestinationDirectory(new FileInfo(InputFile)));
-                    File.Copy(InputFile, fileDestinationPath);
+            }
+            else
+            {
+                string fileDestinationPath = createUniqueFilePath(InputFile);
+                Directory.CreateDirectory(generateDestinationDirectory(new FileInfo(InputFile)));
+                File.Copy(InputFile, fileDestinationPath);
                 result = true;
-                }
+            }
 
             return result;
 
-            
+
         }
 
         private bool checkIfImageIsDuplicate(string path)
@@ -76,12 +78,14 @@ namespace ImageSorter
         {
             long result = 17;
             using (Bitmap image = new Bitmap(imagePath))
+                using(Bitmap fingerprint = new Bitmap(image, new Size(32,32)))
             {
-                for (int i = 0; i < image.Width; i++)
+
+                for (int i = 0; i < fingerprint.Width; i++)
                 {
-                    for (int j = 0; j < image.Height; j++)
+                    for (int j = 0; j < fingerprint.Height; j++)
                     {
-                        Color pixelColour = image.GetPixel(i, j);
+                        Color pixelColour = fingerprint.GetPixel(i, j);
                         result = result * 13 + (int)pixelColour.A;
                         result = result * 13 + (int)pixelColour.B;
                         result = result * 13 + (int)pixelColour.G;
@@ -152,9 +156,9 @@ namespace ImageSorter
             return name;
         }
 
-        public static List<string> getallInputImageFiles(string directory)
+        public static List<string> getAllInputImageFiles(string directory)
         {
-            List<string> files = Directory.GetFiles(directory, "", SearchOption.AllDirectories).ToList();
+            List<string> files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories).ToList();
 
             List<string> images = new List<string>();
 

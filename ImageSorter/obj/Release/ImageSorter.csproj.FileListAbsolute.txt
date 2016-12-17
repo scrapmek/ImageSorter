@@ -1,0 +1,14 @@
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\bin\Release\ImageSorter.exe.config
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\bin\Release\ImageSorter.exe
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\bin\Release\ImageSorter.pdb
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\ImageSorter.csprojResolveAssemblyReference.cache
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\MainWindow.g.cs
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\App.g.cs
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\ImageSorter_MarkupCompile.cache
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\ImageSorter_MarkupCompile.lref
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\MainWindow.baml
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\ImageSorter.g.resources
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\ImageSorter.Properties.Resources.resources
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\ImageSorter.csproj.GenerateResource.Cache
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\ImageSorter.exe
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Release\ImageSorter.pdb

@@ -1,0 +1,28 @@
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\bin\Debug\ImageSorter.exe.config
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\bin\Debug\ImageSorter.exe
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\bin\Debug\ImageSorter.pdb
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\MainWindow.g.cs
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\App.g.cs
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\ImageSorter_MarkupCompile.cache
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\ImageSorter_MarkupCompile.lref
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\MainWindow.baml
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\ImageSorter.g.resources
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\ImageSorter.Properties.Resources.resources
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\ImageSorter.csproj.GenerateResource.Cache
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\ImageSorter.exe
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\ImageSorter.pdb
+C:\Users\ScrapMek\Documents\Visual Studio 2015\Projects\ImageSorter\ImageSorter\obj\Debug\ImageSorter.csprojResolveAssemblyReference.cache
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\bin\Debug\ImageSorter.exe.config
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\ImageSorter.exe
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\ImageSorter.pdb
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\bin\Debug\ImageSorter.exe
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\bin\Debug\ImageSorter.pdb
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\ImageSorter.csprojResolveAssemblyReference.cache
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\MainWindow.g.cs
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\App.g.cs
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\ImageSorter_MarkupCompile.cache
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\ImageSorter_MarkupCompile.lref
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\MainWindow.baml
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\ImageSorter.g.resources
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\ImageSorter.Properties.Resources.resources
+C:\Users\ScrapMek\Source\Repos\ImageSorter\ImageSorter\obj\Debug\ImageSorter.csproj.GenerateResource.Cache

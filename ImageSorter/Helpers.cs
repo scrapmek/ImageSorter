@@ -109,5 +109,11 @@ namespace ImageSorter
 
             return Path.Combine(rootDirectory, year, month);
         }
+
+        public static void preserveCreationTime(FileInfo originalFile, FileInfo newfile)
+        {
+            newfile.IsReadOnly = false;
+            newfile.CreationTime = originalFile.CreationTime;
+        }
     }
 }

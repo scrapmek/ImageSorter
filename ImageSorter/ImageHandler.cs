@@ -27,7 +27,11 @@ namespace ImageSorter
                 {
                     string fileDestinationPath = createUniqueDestinationPath(info);
                     File.Copy(imageToTransfer, fileDestinationPath);
-                    Checker.AddNewImageInfo(new FileInfo(fileDestinationPath));
+
+                    FileInfo newFileInfo = new FileInfo(fileDestinationPath);
+                    Checker.AddNewImageInfo(newFileInfo);
+                    Helpers.preserveCreationTime(info, newFileInfo);
+
                     result = true;
                 }
                 else result = false;
@@ -37,7 +41,12 @@ namespace ImageSorter
                 string fileDestinationPath = createUniqueDestinationPath(info);
                 Directory.CreateDirectory(Helpers.GetDestinationDirectory(info, RootDestinationDirectory));
                 File.Copy(imageToTransfer, fileDestinationPath);
-                Checker.AddNewImageInfo(new FileInfo(fileDestinationPath));
+
+
+                FileInfo newFileInfo = new FileInfo(fileDestinationPath);
+                Checker.AddNewImageInfo(newFileInfo);
+                Helpers.preserveCreationTime(info, newFileInfo);
+
                 result = true;
             }
 
@@ -48,7 +57,7 @@ namespace ImageSorter
 
         private string createUniqueDestinationPath(FileInfo info)
         {
-            
+
             string originalName = Path.GetFileNameWithoutExtension(info.FullName);
             string perspectiveName = originalName;
             string directory = Helpers.GetDestinationDirectory(info, RootDestinationDirectory);
@@ -75,9 +84,9 @@ namespace ImageSorter
             return result;
         }
 
-        
 
-        
+
+
 
         private string convertMonthNumberToName(int monthNumber)
         {

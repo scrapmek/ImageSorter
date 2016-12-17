@@ -1,43 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 
 namespace ImageSorter
 {
     class ImageHandler : IDisposable
     {
-        public string RootDestinationDirectory { get; set; }
-        public string InputFile { get; set; }
+        private string RootDestinationDirectory { get; set; }
+        public HashChecker Checker { get; set; }
 
-         
-
-        public ImageHandler(string input, string output)
+        public ImageHandler(string output)
         {
-            InputFile = input;
             RootDestinationDirectory = output;
+            Checker = new HashChecker(RootDestinationDirectory);
         }
 
-        public bool Transfer()
+        public bool Transfer(string imageToTransfer)
         {
             bool result = false;
-            if (checkDirectoryExists(InputFile))
+            FileInfo info = new FileInfo(imageToTransfer);
+
+            if (checkDestinationDirectoryExists(imageToTransfer))
             {
-                if (!checkIfImageIsDuplicate(InputFile))
+
+                if (!Checker.CheckIfDuplicate(info))
                 {
-                    string fileDestinationPath = createUniqueFilePath(InputFile);
-                    File.Copy(InputFile, fileDestinationPath);
+                    string fileDestinationPath = createUniqueDestinationPath(info);
+                    File.Copy(imageToTransfer, fileDestinationPath);
+                    Checker.AddNewImageInfo(new FileInfo(fileDestinationPath));
                     result = true;
                 }
                 else result = false;
             }
             else
             {
-                string fileDestinationPath = createUniqueFilePath(InputFile);
-                Directory.CreateDirectory(Helpers.GenerateDestinationDirectory(new FileInfo(InputFile), RootDestinationDirectory));
-                File.Copy(InputFile, fileDestinationPath);
+                string fileDestinationPath = createUniqueDestinationPath(info);
+                Directory.CreateDirectory(Helpers.GetDestinationDirectory(info, RootDestinationDirectory));
+                File.Copy(imageToTransfer, fileDestinationPath);
+                Checker.AddNewImageInfo(new FileInfo(fileDestinationPath));
                 result = true;
             }
 
@@ -46,42 +46,12 @@ namespace ImageSorter
 
         }
 
-        private bool checkIfImageIsDuplicate(string path)
+        private string createUniqueDestinationPath(FileInfo info)
         {
-            bool result = false;
-            long originalHash = Helpers.GenerateImageHash(path);
-            FileInfo info = new FileInfo(path);
-            string directory = Helpers.GenerateDestinationDirectory(info, RootDestinationDirectory);
-            List<string> files = Directory.EnumerateFiles(directory).ToList();
-            List<string> images = new List<string>();
-            foreach (string item in files)
-            {
-                if (Helpers.CheckFileIsImage(item))
-                    images.Add(item);
-            }
-
-            List<long> hashes = new List<long>();
-
-            foreach (string item in images)
-            {
-                hashes.Add(Helpers.GenerateImageHash(item));
-            }
-
-            if (hashes.Contains(originalHash))
-                result = true;
-
-            return result;
-
-        }
-
-       
-
-        private string createUniqueFilePath(string item)
-        {
-            FileInfo info = new FileInfo(item);
-            string originalName = Path.GetFileNameWithoutExtension(item);
+            
+            string originalName = Path.GetFileNameWithoutExtension(info.FullName);
             string perspectiveName = originalName;
-            string directory = Helpers.GenerateDestinationDirectory(info, RootDestinationDirectory);
+            string directory = Helpers.GetDestinationDirectory(info, RootDestinationDirectory);
 
             int i = 1;
 
@@ -94,12 +64,12 @@ namespace ImageSorter
             return Path.Combine(directory, perspectiveName) + info.Extension;
         }
 
-        private bool checkDirectoryExists(string path)
+        private bool checkDestinationDirectoryExists(string path)
         {
             bool result = false;
             FileInfo info = new FileInfo(path);
 
-            if (Directory.Exists(Helpers.GenerateDestinationDirectory(info, RootDestinationDirectory)))
+            if (Directory.Exists(Helpers.GetDestinationDirectory(info, RootDestinationDirectory)))
                 result = true;
 
             return result;

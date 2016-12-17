@@ -61,11 +61,13 @@ namespace ImageSorter
             return result;
         }
 
-        public static long GenerateImageHash(string imagePath)
+        public static long GenerateImageHash(FileInfo imageInfo)
         {
             long result = 17;
-            using (Bitmap image = new Bitmap(imagePath))
-            using (Bitmap fingerprint = new Bitmap(image, new Size(32, 32)))
+            int fingerprintSize = 32;
+
+            using (Bitmap image = new Bitmap(imageInfo.FullName))
+            using (Bitmap fingerprint = new Bitmap(image, new Size(fingerprintSize, fingerprintSize)))
             {
 
                 for (int i = 0; i < fingerprint.Width; i++)
@@ -98,7 +100,7 @@ namespace ImageSorter
             return time;
         }
 
-        public static string GenerateDestinationDirectory(FileInfo file, string rootDirectory)
+        public static string GetDestinationDirectory(FileInfo file, string rootDirectory)
         {
             DateTime creationDate = Helpers.DetermineLikelyCreationTime(file);
             string year = creationDate.Year.ToString();

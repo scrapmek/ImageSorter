@@ -7,9 +7,9 @@ namespace ImageSorter
         public FileInfo Info { get; set; }
         public long ImageHash { get; set; }
 
-        public ImageInfo(string file, long hash)
+        public ImageInfo(FileInfo info, long hash)
         {
-            this.Info = new FileInfo(file);
+            this.Info = info;
             this.ImageHash = hash;
         }
     }

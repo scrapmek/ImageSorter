@@ -51,50 +51,49 @@ namespace ImageSorter
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
 
-
             List<string> list = Helpers.GetAllInputImageFiles(bundle.sourceFolderBrowser.SelectedPath);
-            
-            for (int i = 0; i < (list.Count); i++)
+            using (ImageHandler imgHandler = new ImageHandler(bundle.destinationFolderBrowser.SelectedPath))
             {
-                try
+                for (int i = 0; i < (list.Count); i++)
                 {
-                    if (worker.CancellationPending == true)
+                    try
                     {
-                        e.Cancel = true;
-                        break;
-                    }
-                    else
-                    {
-                        using(ImageHandler imgHandler = new ImageHandler(list[i], bundle.destinationFolderBrowser.SelectedPath))
+                        if (worker.CancellationPending == true)
                         {
-                            if (imgHandler.Transfer()) filesMoved++;
-                            else duplicatesFound++;
+                            e.Cancel = true;
+                            break;
                         }
+                        else
+                        {
                             
-                        if (list.Count > 0)
-                        {
-                            worker.ReportProgress((int)(((decimal)(i + 1) / ((decimal)list.Count)) * 100));
+                            if (imgHandler.Transfer(list[i])) filesMoved++;
+                                else duplicatesFound++;
+
+                            if (list.Count > 0)
+                            {
+                                worker.ReportProgress((int)(((decimal)(i + 1) / ((decimal)list.Count)) * 100));
+                            }
+                            else worker.ReportProgress(1 * 100);
+
                         }
-                        else worker.ReportProgress(1 * 100);
+
 
                     }
-
+                    catch (Exception ex)
+                    {
+                        System.Windows.MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                        cleanupUI();
+                    }
 
                 }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
-                    cleanupUI();
-                }
+
 
             }
-
-
         }
-
         private void organiseImagesButton_Click(object sender, RoutedEventArgs e)
         {
             feedbackLabel.Content = "Please wait...";
+            progressBar.Value = 0;
             if (bundle.sourceFolderBrowser.SelectedPath != "" && bundle.destinationFolderBrowser.SelectedPath != "")
             {
                 organiseImagesInitialise();

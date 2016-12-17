@@ -13,34 +13,44 @@ namespace ImageSorter
         public HashChecker(string rootDirectory)
         {
             directory = rootDirectory;
+            ImageInfoList = new List<ImageInfo>();
 
             List<string> files = Directory.EnumerateFiles(rootDirectory, "*", SearchOption.AllDirectories).ToList();
             List<string> images = Helpers.GetAllImageFiles(files);
 
             foreach (string item in images)
             {
-                long hash = Helpers.GenerateImageHash(item);
-                ImageInfoList.Add(new ImageInfo(item, hash));
+                FileInfo info = new FileInfo(item);
+                long hash = Helpers.GenerateImageHash(info);
+                ImageInfoList.Add(new ImageInfo(info, hash));
             }
             
         }
 
-        public void AddNewImageInfo(string path, long hash)
+        public void AddNewImageInfo(FileInfo info)
         {
-            ImageInfoList.Add(new ImageInfo(path, hash));
+            long hash = Helpers.GenerateImageHash(info);
+            ImageInfoList.Add(new ImageInfo(info, hash));
+
         }
 
-        public bool CheckIfDuplicate(string path)
+        public bool CheckIfDuplicate(FileInfo file)
         {
             bool result = false;
 
-            FileInfo perspectiveInfo = new FileInfo(path);
-            long perspectiveHash = Helpers.GenerateImageHash(path); 
-            string perspectiveDestinationFolder = Helpers.GenerateDestinationDirectory(perspectiveInfo, directory);
+            long perspectiveHash = Helpers.GenerateImageHash(file); 
+            string perspectiveDestinationFolder = Helpers.GetDestinationDirectory(file, directory);
+            List<ImageInfo> existingImagesInSameFolder = new List<ImageInfo>();
 
             foreach (ImageInfo item in ImageInfoList)
             {
-                if (perspectiveDestinationFolder == item.Info.DirectoryName && perspectiveHash == item.ImageHash)
+                if (item.Info.DirectoryName == perspectiveDestinationFolder)
+                    existingImagesInSameFolder.Add(item);
+            }
+
+            foreach (ImageInfo item in existingImagesInSameFolder)
+            {
+                if (perspectiveHash == item.ImageHash)
                 {
                     result = true;
                     break;

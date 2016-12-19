@@ -97,6 +97,8 @@ namespace ImageSorter
 
         public void Dispose()
         {
+            RootDestinationDirectory = null;
+            Checker = null;
             GC.Collect();
         }
     }

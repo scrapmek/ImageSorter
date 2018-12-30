@@ -18,6 +18,7 @@ namespace ImageSorter
         BackgroundWorker worker;
         int filesMoved;
         int duplicatesFound;
+        int errors;
         bool transferCancelled;
 
         public MainWindow()
@@ -81,8 +82,8 @@ namespace ImageSorter
                     }
                     catch (Exception ex)
                     {
-                        System.Windows.MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
-                        cleanupUI();
+                        errors++;
+                        System.Windows.MessageBox.Show("Error transferring file: " + list[i] + Environment.NewLine + "Message: " + ex.Message , "Error", MessageBoxButton.OK);
                     }
 
                 }
@@ -109,6 +110,7 @@ namespace ImageSorter
                 organiseImagesButton.Content = "Cancel";
                 filesMoved = 0;
                 duplicatesFound = 0;
+                errors = 0;
                 transferCancelled = false;
                 organiseFiles();
             }
@@ -147,9 +149,9 @@ namespace ImageSorter
 
             if (transferCancelled)
             {
-                feedbackLabel.Content = String.Format("Image transfer cancelled, {0} copied, {1} found.", findFilesTransferedString(), findDuplicatesFoundString());
+                feedbackLabel.Content = String.Format("Image transfer cancelled, {0} copied, {1} found.{2}", findFilesTransferedString(), findDuplicatesFoundString(), findErrorsString());
             }
-            else feedbackLabel.Content = String.Format("Image transfer complete, {0} copied, {1} found.", findFilesTransferedString(), findDuplicatesFoundString());
+            else feedbackLabel.Content = String.Format("Image transfer complete, {0} copied, {1} found.{2}", findFilesTransferedString(), findDuplicatesFoundString(), findErrorsString());
         }
 
         private string findDuplicatesFoundString()
@@ -161,6 +163,22 @@ namespace ImageSorter
             else
             {
                 return String.Format("{0} duplicates", duplicatesFound);
+            }
+        }
+
+        private string findErrorsString()
+        {
+            if (errors < 1)
+            {
+                return "";
+            }
+            if (errors == 1)
+            {
+                return String.Format(" {0} error.", errors);
+            }
+            else
+            {
+                return String.Format(" {0} errors.", errors);
             }
         }
 

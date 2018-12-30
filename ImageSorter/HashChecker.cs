@@ -14,15 +14,15 @@ namespace ImageSorter
             directory = rootDirectory;
             ImageInfoList = new List<ImageInfo>();
 
-            List<string> files = Directory.EnumerateFiles(rootDirectory, "*", SearchOption.AllDirectories).ToList();
-            List<string> images = Helpers.GetAllImageFiles(files);
+            //List<string> files = Directory.EnumerateFiles(rootDirectory, "*", SearchOption.AllDirectories).ToList();
+            //List<string> images = Helpers.GetAllImageFiles(files);
 
-            foreach (string item in images)
-            {
-                FileInfo info = new FileInfo(item);
-                long hash = Helpers.GenerateImageHash(info);
-                ImageInfoList.Add(new ImageInfo(info, hash));
-            }
+            //foreach (string item in images)
+            //{
+            //    FileInfo info = new FileInfo(item);
+            //    long hash = Helpers.GenerateImageHash(info);
+            //    ImageInfoList.Add(new ImageInfo(info, hash));
+            //}
             
         }
 
@@ -39,23 +39,20 @@ namespace ImageSorter
 
             long perspectiveHash = Helpers.GenerateImageHash(file); 
             string perspectiveDestinationFolder = Helpers.GetDestinationDirectory(file, directory);
-            List<ImageInfo> existingImagesInSameFolder = new List<ImageInfo>();
 
-            foreach (ImageInfo item in ImageInfoList)
-            {
-                if (item.Info.DirectoryName == perspectiveDestinationFolder)
-                    existingImagesInSameFolder.Add(item);
+            // Add files from destination tree that havent already been added.
+
+            if (Directory.Exists(perspectiveDestinationFolder)) {
+                List<string> bla = Helpers.GetAllImageFiles(Directory.GetFiles(perspectiveDestinationFolder)?.ToList());
+                IEnumerable<string> filesToAdd = bla.Where(x => !this.ImageInfoList.Select(y => y.Info.FullName).Contains(x));
+
+                foreach (var item in filesToAdd)
+                    AddNewImageInfo(new FileInfo(item));
             }
 
-            foreach (ImageInfo item in existingImagesInSameFolder)
-            {
-                if (perspectiveHash == item.ImageHash)
-                {
+            
+            if (ImageInfoList.Any(x => x.Info.DirectoryName == perspectiveDestinationFolder && x.ImageHash == perspectiveHash))
                     result = true;
-                    break;
-                }
-
-            }
 
             return result;
         }

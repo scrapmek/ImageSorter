@@ -50,15 +50,7 @@ namespace ImageSorter
 
         public static List<string> GetAllImageFiles(List<string> files)
         {
-            List<string> result = new List<string>();
-
-            foreach (string item in files)
-            {
-                if (CheckFileIsImage(item))
-                    result.Add(item);
-            }
-
-            return result;
+            return files.Where(x => CheckFileIsImage(x)).ToList();
         }
 
         public static long GenerateImageHash(FileInfo imageInfo)
@@ -87,17 +79,19 @@ namespace ImageSorter
 
         public static DateTime DetermineLikelyCreationTime(FileInfo fileInfo)
         {
-            DateTime time = fileInfo.CreationTime;
-            if (time > fileInfo.LastAccessTime)
-            {
-                time = fileInfo.LastAccessTime;
-            }
-            if (time > fileInfo.LastWriteTime)
-            {
-                time = fileInfo.LastWriteTime;
-            }
+            List<DateTime> times =
+                new List<DateTime>();
 
-            return time;
+            if (fileInfo.CreationTime > new DateTime(2000, 1, 1))
+                times.Add(fileInfo.CreationTime);
+
+            if (fileInfo.LastWriteTime > new DateTime(2000, 1, 1))
+                times.Add(fileInfo.LastWriteTime);
+
+            if (fileInfo.LastAccessTime > new DateTime(2000,1,1))
+                times.Add(fileInfo.LastAccessTime);
+
+            return times.OrderBy(x => x)?.FirstOrDefault() ?? new DateTime();
         }
 
         public static string GetDestinationDirectory(FileInfo file, string rootDirectory)

@@ -13,17 +13,6 @@ namespace ImageSorter
         {
             directory = rootDirectory;
             ImageInfoList = new List<ImageInfo>();
-
-            //List<string> files = Directory.EnumerateFiles(rootDirectory, "*", SearchOption.AllDirectories).ToList();
-            //List<string> images = Helpers.GetAllImageFiles(files);
-
-            //foreach (string item in images)
-            //{
-            //    FileInfo info = new FileInfo(item);
-            //    long hash = Helpers.GenerateImageHash(info);
-            //    ImageInfoList.Add(new ImageInfo(info, hash));
-            //}
-            
         }
 
         public void AddNewImageInfo(FileInfo info)

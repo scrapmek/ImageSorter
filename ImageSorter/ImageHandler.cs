@@ -19,13 +19,13 @@ namespace ImageSorter
         {
             bool result = false;
 
-            if (checkDestinationDirectoryExists(imageToTransfer))
+            if (checkDestinationDirectoryExists(info))
             {
 
                 if (!Checker.CheckIfDuplicate(info))
                 {
                     string fileDestinationPath = createUniqueDestinationPath(info);
-                    File.Copy(imageToTransfer.FullName, fileDestinationPath);
+                    File.Copy(info.FullName, fileDestinationPath);
 
                     FileInfo newFileInfo = new FileInfo(fileDestinationPath);
                     Checker.AddNewImageInfo(newFileInfo);

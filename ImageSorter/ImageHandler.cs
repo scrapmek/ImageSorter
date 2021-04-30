@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ImageSorter
 {
-    class ImageHandler : IDisposable
+    class ImageHandler 
     {
         private string RootDestinationDirectory { get; set; }
         public HashChecker Checker { get; set; }
@@ -15,10 +15,9 @@ namespace ImageSorter
             Checker = new HashChecker(RootDestinationDirectory);
         }
 
-        public bool Transfer(string imageToTransfer)
+        public bool Transfer(FileInfo info)
         {
             bool result = false;
-            FileInfo info = new FileInfo(imageToTransfer);
 
             if (checkDestinationDirectoryExists(imageToTransfer))
             {
@@ -26,7 +25,7 @@ namespace ImageSorter
                 if (!Checker.CheckIfDuplicate(info))
                 {
                     string fileDestinationPath = createUniqueDestinationPath(info);
-                    File.Copy(imageToTransfer, fileDestinationPath);
+                    File.Copy(imageToTransfer.FullName, fileDestinationPath);
 
                     FileInfo newFileInfo = new FileInfo(fileDestinationPath);
                     Checker.AddNewImageInfo(newFileInfo);
@@ -40,7 +39,7 @@ namespace ImageSorter
             {
                 string fileDestinationPath = createUniqueDestinationPath(info);
                 Directory.CreateDirectory(Helpers.GetDestinationDirectory(info, RootDestinationDirectory));
-                File.Copy(imageToTransfer, fileDestinationPath);
+                File.Copy(info.FullName, fileDestinationPath);
 
 
                 FileInfo newFileInfo = new FileInfo(fileDestinationPath);
@@ -73,33 +72,9 @@ namespace ImageSorter
             return Path.Combine(directory, perspectiveName) + info.Extension;
         }
 
-        private bool checkDestinationDirectoryExists(string path)
+        private bool checkDestinationDirectoryExists(FileInfo info)
         {
-            bool result = false;
-            FileInfo info = new FileInfo(path);
-
-            if (Directory.Exists(Helpers.GetDestinationDirectory(info, RootDestinationDirectory)))
-                result = true;
-
-            return result;
-        }
-
-
-
-
-
-        private string convertMonthNumberToName(int monthNumber)
-        {
-            string name = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(monthNumber);
-
-            return name;
-        }
-
-        public void Dispose()
-        {
-            RootDestinationDirectory = null;
-            Checker = null;
-            GC.Collect();
+			return Directory.Exists(Helpers.GetDestinationDirectory(info, RootDestinationDirectory));
         }
     }
 }

@@ -43,11 +43,13 @@ namespace ImageSorter
             // Add files from destination tree that havent already been added.
 
             if (Directory.Exists(perspectiveDestinationFolder)) {
-                List<string> bla = Helpers.GetAllImageFiles(Directory.GetFiles(perspectiveDestinationFolder)?.ToList());
-                IEnumerable<string> filesToAdd = bla.Where(x => !this.ImageInfoList.Select(y => y.Info.FullName).Contains(x));
+				var destinationFiles = Directory.GetFiles(perspectiveDestinationFolder) ?? new string[0];
+
+				var bla = Helpers.GetAllImageFiles(destinationFiles.Select(x => new FileInfo(x)));
+                var filesToAdd = bla.Where(x => !this.ImageInfoList.Select(y => y.Info.FullName).Contains(x.FullName));
 
                 foreach (var item in filesToAdd)
-                    AddNewImageInfo(new FileInfo(item));
+                    AddNewImageInfo(item);
             }
 
             

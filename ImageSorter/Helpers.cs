@@ -7,107 +7,85 @@ using System.Linq;
 
 namespace ImageSorter
 {
-    static class Helpers
-    {
-        public static bool CheckFileIsImage(string filePath)
-        {
-            bool result = false;
-            string extension = Path.GetExtension(filePath).ToUpper();
-            List<string> filetypes = new List<string> {
-            ".JPG",
-            ".JPEG",
-            ".JIF",
-            ".JFIF",
-            ".PNG",
-            ".BMP",
-            ".TIFF",
-            ".TIF",
-            ".GIF"};
+	static class Helpers
+	{
+		public static IEnumerable<string> ImageExtensions =>
+			new string[]
+			{
+				".JPG",
+				".JPEG",
+				".JIF",
+				".JFIF",
+				".PNG",
+				".BMP",
+				".TIFF",
+				".TIF",
+				".GIF"
+			};
 
 
-            if (filetypes.Contains(extension))
-            {
-                result = true;
-            }
 
-            return result;
-        }
+		public static bool IsImage(this FileInfo file) => ImageExtensions.Any(x => x == file.Extension);
 
-        public static List<string> GetAllInputImageFiles(string directory)
-        {
-            List<string> files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories).ToList();
+		public static IEnumerable<FileInfo> GetAllInputImageFiles(string directory) => Directory.GetFiles(directory, "*", SearchOption.AllDirectories).Select(x => new FileInfo(x)).Where(x => x.IsImage());
 
-            List<string> images = new List<string>();
+		public static IEnumerable<FileInfo> GetAllImageFiles(IEnumerable<FileInfo> files) => files.Where(x => x.IsImage());
 
-            foreach (string item in files)
-            {
-                if (Helpers.CheckFileIsImage(item))
-                    images.Add(item);
-            }
+		public static long GenerateImageHash(FileInfo imageInfo)
+		{
+			long result = 17;
+			int fingerprintSize = 32;
 
-            return images;
-        }
+			using (Bitmap image = new Bitmap(imageInfo.FullName))
+			using (Bitmap fingerprint = new Bitmap(image, new Size(fingerprintSize, fingerprintSize)))
+			{
 
-        public static List<string> GetAllImageFiles(List<string> files)
-        {
-            return files.Where(x => CheckFileIsImage(x)).ToList();
-        }
+				for (int i = 0; i < fingerprint.Width; i++)
+				{
+					for (int j = 0; j < fingerprint.Height; j++)
+					{
+						Color pixelColour = fingerprint.GetPixel(i, j);
+						result = result * 13 + (int)pixelColour.A;
+						result = result * 13 + (int)pixelColour.B;
+						result = result * 13 + (int)pixelColour.G;
+						result = result * 13 + (int)pixelColour.R;
+					}
+				}
+			}
+			return result;
+		}
 
-        public static long GenerateImageHash(FileInfo imageInfo)
-        {
-            long result = 17;
-            int fingerprintSize = 32;
+		public static DateTime DetermineLikelyCreationTime(FileInfo fileInfo)
+		{
+			List<DateTime> times =
+				new List<DateTime>();
 
-            using (Bitmap image = new Bitmap(imageInfo.FullName))
-            using (Bitmap fingerprint = new Bitmap(image, new Size(fingerprintSize, fingerprintSize)))
-            {
+			if (fileInfo.CreationTime > new DateTime(2000, 1, 1))
+				times.Add(fileInfo.CreationTime);
 
-                for (int i = 0; i < fingerprint.Width; i++)
-                {
-                    for (int j = 0; j < fingerprint.Height; j++)
-                    {
-                        Color pixelColour = fingerprint.GetPixel(i, j);
-                        result = result * 13 + (int)pixelColour.A;
-                        result = result * 13 + (int)pixelColour.B;
-                        result = result * 13 + (int)pixelColour.G;
-                        result = result * 13 + (int)pixelColour.R;
-                    }
-                }
-            }
-            return result;
-        }
+			if (fileInfo.LastWriteTime > new DateTime(2000, 1, 1))
+				times.Add(fileInfo.LastWriteTime);
 
-        public static DateTime DetermineLikelyCreationTime(FileInfo fileInfo)
-        {
-            List<DateTime> times =
-                new List<DateTime>();
+			if (fileInfo.LastAccessTime > new DateTime(2000, 1, 1))
+				times.Add(fileInfo.LastAccessTime);
 
-            if (fileInfo.CreationTime > new DateTime(2000, 1, 1))
-                times.Add(fileInfo.CreationTime);
+			return times.OrderBy(x => x)?.FirstOrDefault() ?? new DateTime();
+		}
 
-            if (fileInfo.LastWriteTime > new DateTime(2000, 1, 1))
-                times.Add(fileInfo.LastWriteTime);
+		public static string GetDestinationDirectory(FileInfo file, string rootDirectory)
+		{
+			DateTime creationDate = Helpers.DetermineLikelyCreationTime(file);
+			string year = creationDate.Year.ToString();
+			string month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationDate.Month);
+			month = month.First().ToString().ToUpper() + month.Substring(1);
 
-            if (fileInfo.LastAccessTime > new DateTime(2000,1,1))
-                times.Add(fileInfo.LastAccessTime);
+			return Path.Combine(rootDirectory, year, month);
+		}
 
-            return times.OrderBy(x => x)?.FirstOrDefault() ?? new DateTime();
-        }
-
-        public static string GetDestinationDirectory(FileInfo file, string rootDirectory)
-        {
-            DateTime creationDate = Helpers.DetermineLikelyCreationTime(file);
-            string year = creationDate.Year.ToString();
-            string month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationDate.Month);
-            month = month.First().ToString().ToUpper() + month.Substring(1);
-
-            return Path.Combine(rootDirectory, year, month);
-        }
-
-        public static void preserveCreationTime(FileInfo originalFile, FileInfo newfile)
-        {
-            newfile.IsReadOnly = false;
-            newfile.CreationTime = originalFile.CreationTime;
-        }
-    }
+		public static void preserveCreationTime(FileInfo originalFile, FileInfo newfile)
+		{
+			newfile.IsReadOnly = false;
+			newfile.CreationTime = originalFile.CreationTime;
+		}
+	}
 }
